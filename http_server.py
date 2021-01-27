@@ -20,7 +20,12 @@ def response_ok(body=b"This is a minimal response", mimetype=b"text/plain"):
     """
 
     # TODO: Implement response_ok
-    return b""
+    return b"\r\n".join([
+        b"HTTP/1.1 200 OK"
+        b"Content-Type: " + mimetype,
+        b"",
+        body,
+    ])
 
 def response_method_not_allowed():
     """Returns a 405 Method Not Allowed response"""
@@ -85,7 +90,7 @@ def response_path(path):
     # If the path is "make_time.py", then you may OPTIONALLY return the
     # result of executing `make_time.py`. But you need only return the
     # CONTENTS of `make_time.py`.
-    
+
     content = b"not implemented"
     mime_type = b"not implemented"
 
@@ -107,6 +112,7 @@ def server(log_buffer=sys.stderr):
             try:
                 print('connection - {0}:{1}'.format(*addr), file=log_buffer)
 
+                # responsible for retrieving the request from the client
                 request = ''
                 while True:
                     data = conn.recv(1024)
@@ -114,7 +120,7 @@ def server(log_buffer=sys.stderr):
 
                     if '\r\n\r\n' in request:
                         break
-		
+
 
                 print("Request received:\n{}\n\n".format(request))
 
@@ -126,7 +132,7 @@ def server(log_buffer=sys.stderr):
                 # TODO; If parse_request raised a NotImplementedError, then let
                 # response be a method_not_allowed response. If response_path raised
                 # a NameError, then let response be a not_found response. Else,
-                # use the content and mimetype from response_path to build a 
+                # use the content and mimetype from response_path to build a
                 # response_ok.
                 response = response_ok(
                     body=b"Welcome to my web server",
@@ -137,7 +143,7 @@ def server(log_buffer=sys.stderr):
             except:
                 traceback.print_exc()
             finally:
-                conn.close() 
+                conn.close()
 
     except KeyboardInterrupt:
         sock.close()
