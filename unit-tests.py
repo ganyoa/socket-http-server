@@ -53,7 +53,7 @@ class TestCase(unittest.TestCase):
         content, mime_type = http_server.response_path(path)
 
         self.assertEqual(b"text/html", mime_type)
-        
+
         with open(os.path.join("webroot", "a_web_page.html"), "rb") as f:
             self.assertEqual(f.read(), content)
 
@@ -61,7 +61,8 @@ class TestCase(unittest.TestCase):
         path = "/"
 
         content, mime_type = http_server.response_path(path)
-
+       # print("content: " + content)
+       # print("mime_type: " + mime_type)
         self.assertIn(b"favicon.ico", content)
         self.assertIn(b"make_time.py", content)
         self.assertIn(b"sample.txt", content)
